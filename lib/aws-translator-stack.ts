@@ -6,6 +6,7 @@ import {
 	Tags,
 } from "aws-cdk-lib";
 import { AuthorizationType, LambdaRestApi } from "aws-cdk-lib/aws-apigateway";
+import { CfnBudget } from "aws-cdk-lib/aws-budgets";
 import {
 	AllowedMethods,
 	CachePolicy,
@@ -92,7 +93,7 @@ export class AwsTranslatorStack extends Stack {
 					ResponseHeadersPolicy.CORS_ALLOW_ALL_ORIGINS_WITH_PREFLIGHT,
 			},
 			additionalBehaviors: {
-				[`/${LANGUAGE_DETECTION_ROUTE}*`]: {
+				[`/${LANGUAGE_DETECTION_ROUTE}`]: {
 					origin: new HttpOrigin(
 						`${api.restApiId}.execute-api.${this.region}.amazonaws.com`,
 						{
@@ -119,6 +120,49 @@ export class AwsTranslatorStack extends Stack {
 		new BucketDeployment(this, "DeployFrontend", {
 			sources: [Source.asset("frontend/dist")],
 			destinationBucket: websiteBucket,
+		});
+
+		// AWS Budget: 30 EUR/month, notify at 10 and 20 EUR
+		new CfnBudget(this, "MonthlyBudget", {
+			budget: {
+				budgetType: "COST",
+				timeUnit: "MONTHLY",
+				budgetLimit: {
+					amount: 30,
+					unit: "USD",
+				},
+				costFilters: {},
+			},
+			notificationsWithSubscribers: [
+				{
+					notification: {
+						notificationType: "ACTUAL",
+						comparisonOperator: "GREATER_THAN",
+						threshold: 10,
+						thresholdType: "ABSOLUTE_VALUE",
+					},
+					subscribers: [
+						{
+							subscriptionType: "EMAIL",
+							address: "fridges.hamachi2i@icloud.com",
+						},
+					],
+				},
+				{
+					notification: {
+						notificationType: "ACTUAL",
+						comparisonOperator: "GREATER_THAN",
+						threshold: 20,
+						thresholdType: "ABSOLUTE_VALUE",
+					},
+					subscribers: [
+						{
+							subscriptionType: "EMAIL",
+							address: "fridges.hamachi2i@icloud.com",
+						},
+					],
+				},
+			],
 		});
 	}
 }
