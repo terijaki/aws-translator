@@ -1,36 +1,25 @@
 {
-    "compilerOptions": {
-        "target": "esnext",
-        "module": "esnext",
-        "moduleResolution": "bundler",
-        "jsx": "react-jsx",
-        "outDir": "dist",
-        "allowJs": true,
-        "checkJs": true,
-        "esModuleInterop": true,
-        "lib": [
-            "ES2015",
-            "ESNext",
-            "dom"
-        ],
-        "skipLibCheck": true,
-        "strict": true,
-        "forceConsistentCasingInFileNames": true,
-        "noFallthroughCasesInSwitch": true,
-        "noUncheckedIndexedAccess": true,
-        "noImplicitOverride": true
-    },
-    "include": [
-        "*.ts",
-        "*.tsx",
-        "**/*.ts",
-        "**/*.tsx",
-        "../constants/*.ts",
-    ],
-    "exclude": [
-        "node_modules",
-        "../node_modules",
-        "../cdk.out",
-        "dist"
-    ]
+	"compilerOptions": {
+		"target": "esnext",
+		"module": "esnext",
+		"moduleResolution": "bundler",
+		"jsx": "react-jsx",
+		"outDir": "dist",
+		"allowJs": true,
+		"checkJs": true,
+		"esModuleInterop": true,
+		"lib": ["ES2015", "ESNext", "dom"],
+		"skipLibCheck": true,
+		"strict": true,
+		"forceConsistentCasingInFileNames": true,
+		"noFallthroughCasesInSwitch": true,
+		"noUncheckedIndexedAccess": true,
+		"noImplicitOverride": true,
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["./*"]
+		}
+	},
+	"include": ["*.ts", "*.tsx", "**/*.ts", "**/*.tsx", "../constants/*.ts"],
+	"exclude": ["node_modules", "../node_modules", "../cdk.out", "dist"]
 }

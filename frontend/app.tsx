@@ -4,8 +4,21 @@ import {
 	QueryClientProvider,
 	useMutation,
 } from "@tanstack/react-query";
+import { BadgeCheck, CloudAlert, Languages } from "lucide-react";
 import { createRoot } from "react-dom/client";
+import { toast } from "sonner";
 import { LANGUAGE_DETECTION_ROUTE } from "../constants/routeNames";
+import { Alert, AlertDescription, AlertTitle } from "./components/ui/alert";
+import { Button } from "./components/ui/button";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "./components/ui/card";
+import { Toaster } from "./components/ui/sonner";
+import { Textarea } from "./components/ui/textarea";
 
 async function detectLanguage(text: string) {
 	try {
@@ -16,7 +29,7 @@ async function detectLanguage(text: string) {
 		});
 		if (!res.ok) {
 			const statusText = res.statusText;
-			throw new Error(`Error! HTTP ${res.status}: ${statusText}`);
+			throw new Error(`HTTP ${res.status}: ${statusText}`);
 		}
 		const data = await res.json();
 		if (data.languageCode) {
@@ -36,67 +49,88 @@ async function detectLanguage(text: string) {
 function App() {
 	const mutation = useMutation({
 		mutationFn: detectLanguage,
+		onError: (error) => {
+			toast("SERVER ERROR!", {
+				description: error.message,
+				icon: <CloudAlert size={18} strokeWidth={2.5} />,
+				action: {
+					label: "Reset",
+					onClick: () => {
+						form.reset();
+					},
+				},
+			});
+		},
 	});
-	const { mutate, isPending, isSuccess, isError, data, error } = mutation;
+	const { mutate, isPending, isSuccess, data } = mutation;
 	const form = useForm({
 		defaultValues: { text: "" },
 		onSubmit: async ({ value }) => {
-			mutate(value.text);
+			mutate(value.text.trim());
 		},
 	});
 
 	return (
 		<div className="max-w-md mx-auto mt-8 font-sans">
-			<h2 className="text-2xl font-bold mb-6 text-center">Language Detector</h2>
-			<form
-				onSubmit={(e) => {
-					e.preventDefault();
-					form.handleSubmit(e);
-				}}
-				className="space-y-4"
-			>
-				<form.Field
-					name="text"
-					validators={{
-						onChange: ({ value }) =>
-							!value.trim() ? "Text required" : undefined,
-					}}
-				>
-					{(field) => (
-						<>
-							<textarea
-								rows={4}
-								className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
-								value={field.state.value}
-								onChange={(e) => field.setValue(e.target.value)}
-								placeholder="Enter text to detect language..."
-							/>
-							{field.state.meta.errors.length > 0 && (
-								<div className="text-red-600 mt-1 text-sm">
-									{field.state.meta.errors[0]}
-								</div>
+			<Card>
+				<CardHeader>
+					<CardTitle>
+						<div className="flex items-center space-x-2">
+							<Languages size={28} strokeWidth={2.5} />
+							<div>Language Detector</div>
+						</div>
+					</CardTitle>
+					<CardDescription>Detect the language of your text.</CardDescription>
+				</CardHeader>
+				<CardContent>
+					<form
+						onSubmit={(e) => {
+							e.preventDefault();
+							form.handleSubmit(e);
+						}}
+						className="space-y-4"
+					>
+						<form.Field name="text">
+							{(field) => (
+								<>
+									<Textarea
+										rows={4}
+										value={field.state.value}
+										onChange={(e) => field.setValue(e.target.value)}
+										placeholder="Enter text to detect language..."
+									/>
+									<Button
+										type="submit"
+										disabled={isPending || !field.state.value.trim()}
+										className="w-full mt-2"
+									>
+										{isPending || form.state.isSubmitting
+											? "Detecting..."
+											: "Detect Language"}
+									</Button>
+									{field.state.meta.errors.length > 0 && (
+										<Alert variant="destructive">
+											<AlertTitle>Heads up!</AlertTitle>
+											<AlertDescription>
+												{field.state.meta.errors[0]}
+											</AlertDescription>
+										</Alert>
+									)}
+								</>
 							)}
-						</>
-					)}
-				</form.Field>
-				<button
-					type="submit"
-					disabled={isPending || form.state.isSubmitted}
-					className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition-colors duration-200 disabled:opacity-50 mt-2"
-				>
-					{isPending || form.state.isSubmitting
-						? "Detecting..."
-						: "Detect Language"}
-				</button>
-			</form>
+						</form.Field>
+					</form>
+				</CardContent>
+			</Card>
+
 			{isSuccess && data?.languageCode && (
-				<div className="mt-4 text-green-600 font-medium text-center">
-					Detected language code: {data.languageCode}
-				</div>
+				<Alert variant="default">
+					<BadgeCheck size={28} strokeWidth={2.5} />
+					<AlertTitle>Detected language code</AlertTitle>
+					<AlertDescription>{data.languageCode}</AlertDescription>
+				</Alert>
 			)}
-			{isError && (
-				<div className="mt-4 text-red-600 text-center">{error.message}</div>
-			)}
+			<Toaster />
 		</div>
 	);
 }

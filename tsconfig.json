@@ -12,7 +12,8 @@
 		"skipLibCheck": true,
 		"noFallthroughCasesInSwitch": true,
 		"noUncheckedIndexedAccess": true,
-		"noImplicitOverride": true
+		"noImplicitOverride": true,
+		"baseUrl": "."
 	},
 	"include": ["**/*.ts"],
 	"exclude": ["node_modules", "cdk.out"]
