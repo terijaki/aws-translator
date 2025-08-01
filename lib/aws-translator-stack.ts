@@ -48,7 +48,7 @@ export class AwsTranslatorStack extends Stack {
 			this,
 			"DetectLanguageHandler",
 			{
-				runtime: Runtime.NODEJS_LATEST,
+				runtime: Runtime.NODEJS_22_X,
 				entry: "lambda/detect-language.ts",
 				handler: "handler",
 				environment: {},
