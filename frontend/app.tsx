@@ -22,7 +22,7 @@ import { Textarea } from "./components/ui/textarea";
 
 async function detectLanguage(text: string) {
 	try {
-		const res = await fetch(`/prod/${LANGUAGE_DETECTION_ROUTE}`, {
+		const res = await fetch(`/${LANGUAGE_DETECTION_ROUTE}`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({ text }),
