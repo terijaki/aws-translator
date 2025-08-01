@@ -4,7 +4,7 @@ import {
 	QueryClientProvider,
 	useMutation,
 } from "@tanstack/react-query";
-import { BadgeCheck, CloudAlert, Languages } from "lucide-react";
+import { BadgeCheck, CloudAlert, Languages, Loader } from "lucide-react";
 import { createRoot } from "react-dom/client";
 import { toast } from "sonner";
 import { LANGUAGE_EMOJI_MAP, LANGUAGE_NAME_MAP } from "../constants/languages";
@@ -18,6 +18,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "./components/ui/card";
+import { Skeleton } from "./components/ui/skeleton";
 import { Toaster } from "./components/ui/sonner";
 import { Textarea } from "./components/ui/textarea";
 
@@ -105,10 +106,12 @@ function App() {
 											type="submit"
 											disabled={isPending || !field.state.value.trim()}
 											className="w-full mt-2"
+											color="purple"
 										>
+
 											{isPending || form.state.isSubmitting
-												? "Detecting..."
-												: "Detect Language"}
+												? <><Loader className="animate-spin animation-duration-2000" />Processing...</>
+												: "Analyse"}
 										</Button>
 										{field.state.meta.errors.length > 0 && (
 											<Alert variant="destructive">
@@ -125,6 +128,8 @@ function App() {
 					</CardContent>
 				</Card>
 
+				{isPending && <Skeleton className="h-18 w-full bg-neutral-300" />}
+				
 				{isSuccess && data && (
 					<Alert variant="default">
 						<BadgeCheck size={28} strokeWidth={2.5} />
