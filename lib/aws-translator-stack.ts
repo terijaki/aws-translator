@@ -90,7 +90,6 @@ export class AwsTranslatorStack extends Stack {
 		// Modern CloudFront Distribution (S3 for frontend, API Gateway for /detect-language)
 		const cloudFrontDist = new Distribution(this, "CloudFrontDist", {
 			defaultBehavior: {
-				// origin: new S3Origin(websiteBucket, { originAccessIdentity: originAccessIdentityS3 }),
 				origin: new S3StaticWebsiteOrigin(websiteBucket, {
 					originId: originAccessIdentityS3.originAccessIdentityId,
 				}),
