@@ -7,6 +7,7 @@ import {
 import { BadgeCheck, CloudAlert, Languages } from "lucide-react";
 import { createRoot } from "react-dom/client";
 import { toast } from "sonner";
+import { LANGUAGE_EMOJI_MAP, LANGUAGE_NAME_MAP } from "../constants/languages";
 import { LANGUAGE_DETECTION_ROUTE } from "../constants/routeNames";
 import { Alert, AlertDescription, AlertTitle } from "./components/ui/alert";
 import { Button } from "./components/ui/button";
@@ -33,7 +34,7 @@ async function detectLanguage(text: string) {
 		}
 		const data = await res.json();
 		if (data.languageCode) {
-			return { languageCode: data.languageCode };
+			return { languageCode: data.languageCode as string, input: text };
 		} else {
 			throw new Error(data.error || "Unknown error");
 		}
@@ -71,7 +72,7 @@ function App() {
 	});
 
 	return (
-		<div className="max-w-md mx-auto mt-8 font-sans">
+		<div className="max-w-md mx-auto mt-8 font-sans flex flex-col space-y-4">
 			<Card>
 				<CardHeader>
 					<CardTitle>
@@ -123,11 +124,15 @@ function App() {
 				</CardContent>
 			</Card>
 
-			{isSuccess && data?.languageCode && (
+			{isSuccess && data && (
 				<Alert variant="default">
 					<BadgeCheck size={28} strokeWidth={2.5} />
-					<AlertTitle>Detected language code</AlertTitle>
-					<AlertDescription>{data.languageCode}</AlertDescription>
+					<AlertTitle>
+						{LANGUAGE_NAME_MAP[data.languageCode]
+							? `This is ${LANGUAGE_NAME_MAP[data.languageCode]}! ${LANGUAGE_EMOJI_MAP[data.languageCode]}`
+							: `Detected language code: ${data.languageCode}`}
+					</AlertTitle>
+					<AlertDescription>{`"${data.input}"`}</AlertDescription>
 				</Alert>
 			)}
 			<Toaster />
