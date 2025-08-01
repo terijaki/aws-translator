@@ -16,7 +16,10 @@ import {
 	ResponseHeadersPolicy,
 	ViewerProtocolPolicy,
 } from "aws-cdk-lib/aws-cloudfront";
-import { HttpOrigin, S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
+import {
+	HttpOrigin,
+	S3StaticWebsiteOrigin,
+} from "aws-cdk-lib/aws-cloudfront-origins";
 import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
@@ -33,7 +36,10 @@ export class AwsTranslatorStack extends Stack {
 		Tags.of(this).add("App", "aws-translator-app");
 
 		// CloudFront Origin Access Identity for S3
-		const oai = new OriginAccessIdentity(this, "FrontendOAI");
+		const originAccessIdentityS3 = new OriginAccessIdentity(
+			this,
+			"FrontendOAI",
+		);
 
 		// S3 bucket for static website hosting (private, accessed via CloudFront OAI)
 		const websiteBucket = new Bucket(this, "FrontendBucket", {
@@ -42,7 +48,7 @@ export class AwsTranslatorStack extends Stack {
 			autoDeleteObjects: false,
 		});
 		// Enable static website hosting
-		websiteBucket.grantRead(oai);
+		websiteBucket.grantRead(originAccessIdentityS3);
 
 		// Lambda function for language detection (TypeScript, auto-bundled)
 		const detectLanguageLambda = new NodejsFunction(
@@ -84,7 +90,10 @@ export class AwsTranslatorStack extends Stack {
 		// Modern CloudFront Distribution (S3 for frontend, API Gateway for /detect-language)
 		const cloudFrontDist = new Distribution(this, "CloudFrontDist", {
 			defaultBehavior: {
-				origin: new S3Origin(websiteBucket, { originAccessIdentity: oai }),
+				// origin: new S3Origin(websiteBucket, { originAccessIdentity: originAccessIdentityS3 }),
+				origin: new S3StaticWebsiteOrigin(websiteBucket, {
+					originId: originAccessIdentityS3.originAccessIdentityId,
+				}),
 				allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
 				viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
 				compress: true,
