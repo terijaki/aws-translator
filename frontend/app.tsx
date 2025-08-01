@@ -8,18 +8,29 @@ import { createRoot } from "react-dom/client";
 import { LANGUAGE_DETECTION_ROUTE } from "../constants/routeNames";
 
 async function detectLanguage(text: string) {
-	return fetch(`/prod/${LANGUAGE_DETECTION_ROUTE}`, {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({ text }),
-	}).then(async (res) => {
+	try {
+		const res = await fetch(`/prod/${LANGUAGE_DETECTION_ROUTE}`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ text }),
+		});
+		if (!res.ok) {
+			const statusText = res.statusText;
+			throw new Error(`Error! HTTP ${res.status}: ${statusText}`);
+		}
 		const data = await res.json();
-		if (res.ok && data.languageCode) {
+		if (data.languageCode) {
 			return { languageCode: data.languageCode };
 		} else {
 			throw new Error(data.error || "Unknown error");
 		}
-	});
+	} catch (err) {
+		let message = "Network error";
+		if (err instanceof Error && err.message) {
+			message = err.message;
+		}
+		throw new Error(message);
+	}
 }
 
 function App() {
@@ -35,11 +46,15 @@ function App() {
 	});
 
 	return (
-		<div
-			style={{ maxWidth: 400, margin: "2rem auto", fontFamily: "sans-serif" }}
-		>
-			<h2>Language Detector</h2>
-			<form onSubmit={form.handleSubmit}>
+		<div className="max-w-md mx-auto mt-8 font-sans">
+			<h2 className="text-2xl font-bold mb-6 text-center">Language Detector</h2>
+			<form
+				onSubmit={(e) => {
+					e.preventDefault();
+					form.handleSubmit(e);
+				}}
+				className="space-y-4"
+			>
 				<form.Field
 					name="text"
 					validators={{
@@ -51,13 +66,13 @@ function App() {
 						<>
 							<textarea
 								rows={4}
-								style={{ width: "100%" }}
+								className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
 								value={field.state.value}
 								onChange={(e) => field.setValue(e.target.value)}
 								placeholder="Enter text to detect language..."
 							/>
 							{field.state.meta.errors.length > 0 && (
-								<div style={{ color: "red", marginTop: 4 }}>
+								<div className="text-red-600 mt-1 text-sm">
 									{field.state.meta.errors[0]}
 								</div>
 							)}
@@ -67,7 +82,7 @@ function App() {
 				<button
 					type="submit"
 					disabled={isPending || form.state.isSubmitted}
-					style={{ marginTop: 8 }}
+					className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition-colors duration-200 disabled:opacity-50 mt-2"
 				>
 					{isPending || form.state.isSubmitting
 						? "Detecting..."
@@ -75,12 +90,12 @@ function App() {
 				</button>
 			</form>
 			{isSuccess && data?.languageCode && (
-				<div style={{ marginTop: 16, color: "green" }}>
+				<div className="mt-4 text-green-600 font-medium text-center">
 					Detected language code: {data.languageCode}
 				</div>
 			)}
 			{isError && (
-				<div style={{ marginTop: 16, color: "red" }}>{error.message}</div>
+				<div className="mt-4 text-red-600 text-center">{error.message}</div>
 			)}
 		</div>
 	);
