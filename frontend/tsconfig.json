@@ -1,0 +1,20 @@
+{
+	"extends": "../tsconfig.json",
+	"compilerOptions": {
+		"module": "esnext",
+		"jsx": "react-jsx",
+		"outDir": "dist",
+		"allowJs": true,
+		"checkJs": true,
+		"esModuleInterop": true,
+		"lib": ["ES2015", "ESNext", "dom"],
+		"skipLibCheck": true,
+		"strict": true,
+		"forceConsistentCasingInFileNames": true,
+		"noFallthroughCasesInSwitch": true,
+		"noUncheckedIndexedAccess": true,
+		"noImplicitOverride": true
+	},
+	"include": ["**/*.ts", "**/*.tsx", "**/*.ts", "**/*.tsx"],
+	"exclude": ["node_modules", "../node_modules", "../cdk.out", "dist"]
+}

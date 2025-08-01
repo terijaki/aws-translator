@@ -1,0 +1,36 @@
+# dependencies (bun install)
+node_modules
+*node_modules
+
+# output
+*out
+*dist
+*.tgz
+
+# AWS CDK
+cdk.out/
+.cdk.staging/
+cdk.context.json
+cdk*.log
+
+# Lambda build output
+lambda/dist/
+lambda/*.js
+lambda/*.js.map
+
+# Vite/React build output
+frontend/dist/
+frontend/.vite/
+frontend/.cache/
+
+# dotenv environment variable files
+.env
+.env*.local
+
+# IDE files
+.vscode/
+.idea/
+.history/
+
+# OS files
+.DS_Store
