@@ -72,71 +72,73 @@ function App() {
 	});
 
 	return (
-		<div className="max-w-md mx-auto mt-8 font-sans flex flex-col space-y-4">
-			<Card>
-				<CardHeader>
-					<CardTitle>
-						<div className="flex items-center space-x-2">
-							<Languages size={28} strokeWidth={2.5} />
-							<div>Language Detector</div>
-						</div>
-					</CardTitle>
-					<CardDescription>Detect the language of your text.</CardDescription>
-				</CardHeader>
-				<CardContent>
-					<form
-						onSubmit={(e) => {
-							e.preventDefault();
-							form.handleSubmit(e);
-						}}
-						className="space-y-4"
-					>
-						<form.Field name="text">
-							{(field) => (
-								<>
-									<Textarea
-										rows={4}
-										value={field.state.value}
-										onChange={(e) => field.setValue(e.target.value)}
-										placeholder="Enter text to detect language..."
-									/>
-									<Button
-										type="submit"
-										disabled={isPending || !field.state.value.trim()}
-										className="w-full mt-2"
-									>
-										{isPending || form.state.isSubmitting
-											? "Detecting..."
-											: "Detect Language"}
-									</Button>
-									{field.state.meta.errors.length > 0 && (
-										<Alert variant="destructive">
-											<AlertTitle>Heads up!</AlertTitle>
-											<AlertDescription>
-												{field.state.meta.errors[0]}
-											</AlertDescription>
-										</Alert>
-									)}
-								</>
-							)}
-						</form.Field>
-					</form>
-				</CardContent>
-			</Card>
+		<>
+			<div className="max-w-md mx-auto mt-8 font-sans flex flex-col space-y-4">
+				<Card>
+					<CardHeader>
+						<CardTitle>
+							<div className="flex items-center space-x-2">
+								<Languages size={28} strokeWidth={2.5} />
+								<div>Language Detector</div>
+							</div>
+						</CardTitle>
+						<CardDescription>Detect the language of your text.</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<form
+							onSubmit={(e) => {
+								e.preventDefault();
+								form.handleSubmit(e);
+							}}
+							className="space-y-4"
+						>
+							<form.Field name="text">
+								{(field) => (
+									<>
+										<Textarea
+											rows={4}
+											value={field.state.value}
+											onChange={(e) => field.setValue(e.target.value)}
+											placeholder="Enter text to detect language..."
+										/>
+										<Button
+											type="submit"
+											disabled={isPending || !field.state.value.trim()}
+											className="w-full mt-2"
+										>
+											{isPending || form.state.isSubmitting
+												? "Detecting..."
+												: "Detect Language"}
+										</Button>
+										{field.state.meta.errors.length > 0 && (
+											<Alert variant="destructive">
+												<AlertTitle>Heads up!</AlertTitle>
+												<AlertDescription>
+													{field.state.meta.errors[0]}
+												</AlertDescription>
+											</Alert>
+										)}
+									</>
+								)}
+							</form.Field>
+						</form>
+					</CardContent>
+				</Card>
 
-			{isSuccess && data && (
-				<Alert variant="default">
-					<BadgeCheck size={28} strokeWidth={2.5} />
-					<AlertTitle>
-						{LANGUAGE_NAME_MAP[data.languageCode]
-							? `This is ${LANGUAGE_NAME_MAP[data.languageCode]}! ${LANGUAGE_EMOJI_MAP[data.languageCode]}`
-							: `Detected language code: ${data.languageCode}`}
-					</AlertTitle>
-					<AlertDescription>{`"${data.input}"`}</AlertDescription>
-				</Alert>
-			)}
-			<Toaster />
-		</div>
+				{isSuccess && data && (
+					<Alert variant="default">
+						<BadgeCheck size={28} strokeWidth={2.5} />
+						<AlertTitle>
+							{LANGUAGE_NAME_MAP[data.languageCode]
+								? `This is ${LANGUAGE_NAME_MAP[data.languageCode]}! ${LANGUAGE_EMOJI_MAP[data.languageCode]}`
+								: `Detected language code: ${data.languageCode}`}
+						</AlertTitle>
+						<AlertDescription>{`"${data.input}"`}</AlertDescription>
+					</Alert>
+				)}
+			</div>
+			<Toaster position="bottom-center" />
+		</>
 	);
 }
 
