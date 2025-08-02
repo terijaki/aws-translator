@@ -7,8 +7,12 @@ import {
 import { BadgeCheck, CloudAlert, Languages, Loader } from "lucide-react";
 import { createRoot } from "react-dom/client";
 import { toast } from "sonner";
+import { LANGUAGE_DETECTION_ROUTE } from "../constants/cdkNames";
 import { LANGUAGE_EMOJI_MAP, LANGUAGE_NAME_MAP } from "../constants/languages";
-import { LANGUAGE_DETECTION_ROUTE } from "../constants/routeNames";
+import {
+	LanguageResultsChart,
+	languageResultsQueryKey,
+} from "./components/LanguageResultsChart";
 import { Alert, AlertDescription, AlertTitle } from "./components/ui/alert";
 import { Button } from "./components/ui/button";
 import {
@@ -49,22 +53,31 @@ async function detectLanguage(text: string) {
 }
 
 function App() {
-	const mutation = useMutation({
+	const { mutate, isPending, isSuccess, data } = useMutation({
 		mutationFn: detectLanguage,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: languageResultsQueryKey });
+		},
 		onError: (error) => {
 			toast("SERVER ERROR!", {
+				id: "languageDetectionError",
 				description: error.message,
 				icon: <CloudAlert size={18} strokeWidth={2.5} />,
+				richColors: true,
+				duration: 10000,
 				action: {
 					label: "Reset",
 					onClick: () => {
 						form.reset();
+						toast.dismiss("languageDetectionError");
 					},
+				},
+				onAutoClose: () => {
+					toast.dismiss("languageDetectionError");
 				},
 			});
 		},
 	});
-	const { mutate, isPending, isSuccess, data } = mutation;
 	const form = useForm({
 		defaultValues: { text: "" },
 		onSubmit: async ({ value }) => {
@@ -74,73 +87,82 @@ function App() {
 
 	return (
 		<>
-			<div className="max-w-md mx-auto mt-8 font-sans flex flex-col space-y-4">
-				<Card>
-					<CardHeader>
-						<CardTitle>
-							<div className="flex items-center space-x-2">
-								<Languages size={28} strokeWidth={2.5} />
-								<div>Language Detector</div>
-							</div>
-						</CardTitle>
-						<CardDescription>Detect the language of your text.</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<form
-							onSubmit={(e) => {
-								e.preventDefault();
-								form.handleSubmit(e);
-							}}
-							className="space-y-4"
-						>
-							<form.Field name="text">
-								{(field) => (
-									<>
-										<Textarea
-											rows={4}
-											value={field.state.value}
-											onChange={(e) => field.setValue(e.target.value)}
-											placeholder="Enter text to detect language..."
-										/>
-										<Button
-											type="submit"
-											disabled={isPending || !field.state.value.trim()}
-											className="w-full mt-2"
-											color="purple"
-										>
+			<div className="grid grid-cols-1 lg:grid-cols-2 gap-4 justify-center-safe">
+				<div className="max-w-lg min-w-md flex flex-col space-y-4 mx-auto lg:me-0">
+					<Card className="shadow-xs">
+						<CardHeader>
+							<CardTitle>
+								<div className="flex items-center space-x-2">
+									<Languages size={28} strokeWidth={2.5} />
+									<div>Language Detector</div>
+								</div>
+							</CardTitle>
+							<CardDescription>
+								Detect the language of your text.
+							</CardDescription>
+						</CardHeader>
+						<CardContent>
+							<form
+								onSubmit={(e) => {
+									e.preventDefault();
+									form.handleSubmit(e);
+								}}
+								className="space-y-4"
+							>
+								<form.Field name="text">
+									{(field) => (
+										<>
+											<Textarea
+												rows={4}
+												value={field.state.value}
+												onChange={(e) => field.setValue(e.target.value)}
+												placeholder="Enter text to detect language..."
+											/>
+											<Button
+												type="submit"
+												disabled={isPending || !field.state.value.trim()}
+												className="w-full mt-2"
+												color="purple"
+											>
+												{isPending || form.state.isSubmitting ? (
+													<>
+														<Loader className="animate-spin animation-duration-2000" />
+														Processing...
+													</>
+												) : (
+													"Analyse"
+												)}
+											</Button>
+											{field.state.meta.errors.length > 0 && (
+												<Alert variant="destructive">
+													<AlertTitle>Heads up!</AlertTitle>
+													<AlertDescription>
+														{field.state.meta.errors[0]}
+													</AlertDescription>
+												</Alert>
+											)}
+										</>
+									)}
+								</form.Field>
+							</form>
+						</CardContent>
+					</Card>
 
-											{isPending || form.state.isSubmitting
-												? <><Loader className="animate-spin animation-duration-2000" />Processing...</>
-												: "Analyse"}
-										</Button>
-										{field.state.meta.errors.length > 0 && (
-											<Alert variant="destructive">
-												<AlertTitle>Heads up!</AlertTitle>
-												<AlertDescription>
-													{field.state.meta.errors[0]}
-												</AlertDescription>
-											</Alert>
-										)}
-									</>
-								)}
-							</form.Field>
-						</form>
-					</CardContent>
-				</Card>
+					{isPending && <Skeleton className="h-18 w-full bg-neutral-300" />}
+					{isSuccess && data && (
+						<Alert variant="default">
+							<BadgeCheck size={28} strokeWidth={2.5} />
+							<AlertTitle>
+								{LANGUAGE_NAME_MAP[data.languageCode]
+									? `This is ${LANGUAGE_NAME_MAP[data.languageCode]}! ${LANGUAGE_EMOJI_MAP[data.languageCode]}`
+									: `Detected language code: ${data.languageCode}`}
+							</AlertTitle>
+							<AlertDescription>{`"${data.input}"`}</AlertDescription>
+						</Alert>
+					)}
+				</div>
 
-				{isPending && <Skeleton className="h-18 w-full bg-neutral-300" />}
-				
-				{isSuccess && data && (
-					<Alert variant="default">
-						<BadgeCheck size={28} strokeWidth={2.5} />
-						<AlertTitle>
-							{LANGUAGE_NAME_MAP[data.languageCode]
-								? `This is ${LANGUAGE_NAME_MAP[data.languageCode]}! ${LANGUAGE_EMOJI_MAP[data.languageCode]}`
-								: `Detected language code: ${data.languageCode}`}
-						</AlertTitle>
-						<AlertDescription>{`"${data.input}"`}</AlertDescription>
-					</Alert>
-				)}
+				<LanguageResultsChart />
 			</div>
 			<Toaster position="bottom-center" />
 		</>

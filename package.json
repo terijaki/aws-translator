@@ -23,6 +23,7 @@
 		"deploy": "scripts/deploy.sh"
 	},
 	"workspaces": [
-		"frontend"
+		"frontend",
+		"lambda"
 	]
 }

@@ -5,8 +5,13 @@ import {
 	type StackProps,
 	Tags,
 } from "aws-cdk-lib";
-import { AuthorizationType, LambdaRestApi } from "aws-cdk-lib/aws-apigateway";
+import {
+	AuthorizationType,
+	LambdaIntegration,
+	LambdaRestApi,
+} from "aws-cdk-lib/aws-apigateway";
 import { CfnBudget } from "aws-cdk-lib/aws-budgets";
+import { Certificate } from "aws-cdk-lib/aws-certificatemanager";
 import {
 	AllowedMethods,
 	CachePolicy,
@@ -20,6 +25,7 @@ import {
 	HttpOrigin,
 	S3StaticWebsiteOrigin,
 } from "aws-cdk-lib/aws-cloudfront-origins";
+import { AttributeType, Billing, TableV2 } from "aws-cdk-lib/aws-dynamodb";
 import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
@@ -27,7 +33,11 @@ import * as s3 from "aws-cdk-lib/aws-s3";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { BucketDeployment, Source } from "aws-cdk-lib/aws-s3-deployment";
 import type { Construct } from "constructs";
-import { LANGUAGE_DETECTION_ROUTE } from "../constants/routeNames";
+import {
+	LANGUAGE_DETECTION_RESULTS_ROUTE,
+	LANGUAGE_DETECTION_ROUTE,
+	LANGUAGE_DETECTION_TABLE_NAME,
+} from "../constants/cdkNames";
 
 export class AwsTranslatorStack extends Stack {
 	constructor(scope: Construct, id: string, props?: StackProps) {
@@ -43,12 +53,26 @@ export class AwsTranslatorStack extends Stack {
 
 		// S3 bucket for static website hosting (private, accessed via CloudFront OAI)
 		const websiteBucket = new Bucket(this, "FrontendBucket", {
-			blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+			websiteIndexDocument: "index.html",
+			publicReadAccess: true,
+			blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS_ONLY,
 			removalPolicy: RemovalPolicy.RETAIN,
 			autoDeleteObjects: false,
 		});
 		// Enable static website hosting
 		websiteBucket.grantRead(originAccessIdentityS3);
+
+		// DynamoDB Table to store language detection results
+		const languageDetectionTable = new TableV2(
+			this,
+			LANGUAGE_DETECTION_TABLE_NAME,
+			{
+				tableName: "LanguageDetectionResults",
+				partitionKey: { name: "id", type: AttributeType.STRING },
+				removalPolicy: RemovalPolicy.DESTROY,
+				billing: Billing.onDemand(),
+			},
+		);
 
 		// Lambda function for language detection (TypeScript, auto-bundled)
 		const detectLanguageLambda = new NodejsFunction(
@@ -58,9 +82,13 @@ export class AwsTranslatorStack extends Stack {
 				runtime: Runtime.NODEJS_22_X,
 				entry: "lambda/detect-language.ts",
 				handler: "handler",
-				environment: {},
+				bundling: {
+					externalModules: [], // node_modules to exclude from bundling (keep empty to bundle all)
+				},
 			},
 		);
+		// Grant Lambda permission to write to DynamoDB
+		languageDetectionTable.grantWriteData(detectLanguageLambda);
 		// Grant Lambda permission to use Comprehend
 		detectLanguageLambda.addToRolePolicy(
 			new PolicyStatement({
@@ -87,8 +115,43 @@ export class AwsTranslatorStack extends Stack {
 		const detectResource = api.root.addResource(LANGUAGE_DETECTION_ROUTE);
 		detectResource.addMethod("POST");
 
+		// Lambda function to get language detection results
+		const getLanguageResultsLambda = new NodejsFunction(
+			this,
+			"GetLanguageResultsHandler",
+			{
+				runtime: Runtime.NODEJS_22_X,
+				entry: "lambda/detect-language-results.ts",
+				handler: "handler",
+				bundling: {
+					externalModules: [], // node_modules to exclude from bundling (keep empty to bundle all)
+				},
+			},
+		);
+		// Grant Lambda permission to read from DynamoDB
+		languageDetectionTable.grantReadData(getLanguageResultsLambda);
+		// Add a new resource for getting language results
+		const getResultsResource = api.root.addResource(
+			LANGUAGE_DETECTION_RESULTS_ROUTE,
+		);
+		getResultsResource.addMethod(
+			"GET",
+			new LambdaIntegration(getLanguageResultsLambda),
+		);
+
+		// Import ACM certificate for lang.terijaki.eu (must be in us-east-1 for CloudFront)
+		const certificate = Certificate.fromCertificateArn(
+			this,
+			"LangTerijakiEuCert",
+			"arn:aws:acm:us-east-1:090814024092:certificate/738358d6-36ef-4746-8790-56977529fdf3",
+		);
+
 		// Modern CloudFront Distribution (S3 for frontend, API Gateway for /detect-language)
 		const cloudFrontDist = new Distribution(this, "CloudFrontDist", {
+			defaultRootObject: "index.html",
+			comment: "CloudFront for aws-translator: S3 frontend + API Gateway proxy",
+			domainNames: ["lang.terijaki.eu"],
+			certificate,
 			defaultBehavior: {
 				origin: new S3StaticWebsiteOrigin(websiteBucket, {
 					originId: originAccessIdentityS3.originAccessIdentityId,
@@ -113,9 +176,19 @@ export class AwsTranslatorStack extends Stack {
 					cachePolicy: CachePolicy.CACHING_DISABLED,
 					viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
 				},
+				[`/${LANGUAGE_DETECTION_RESULTS_ROUTE}`]: {
+					origin: new HttpOrigin(
+						`${api.restApiId}.execute-api.${this.region}.amazonaws.com`,
+						{
+							originPath: "/prod",
+							protocolPolicy: OriginProtocolPolicy.HTTPS_ONLY,
+						},
+					),
+					allowedMethods: AllowedMethods.ALLOW_ALL,
+					cachePolicy: CachePolicy.CACHING_DISABLED,
+					viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+				},
 			},
-			defaultRootObject: "index.html",
-			comment: "CloudFront for aws-translator: S3 frontend + API Gateway proxy",
 		});
 
 		// Output the CloudFront URL
