@@ -2,7 +2,16 @@ import { CfnOutput, Duration, RemovalPolicy, Stack, type StackProps, Tags } from
 import { AuthorizationType, LambdaIntegration, LambdaRestApi } from "aws-cdk-lib/aws-apigateway";
 import { CfnBudget } from "aws-cdk-lib/aws-budgets";
 import { Certificate } from "aws-cdk-lib/aws-certificatemanager";
-import { AllowedMethods, CachePolicy, Distribution, OriginAccessIdentity, OriginProtocolPolicy, ResponseHeadersPolicy, ViewerProtocolPolicy } from "aws-cdk-lib/aws-cloudfront";
+import {
+	AllowedMethods,
+	CachePolicy,
+	Distribution,
+	OriginAccessIdentity,
+	OriginProtocolPolicy,
+	PriceClass,
+	ResponseHeadersPolicy,
+	ViewerProtocolPolicy,
+} from "aws-cdk-lib/aws-cloudfront";
 import { HttpOrigin, S3BucketOrigin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { Dashboard, GraphWidget, Metric } from "aws-cdk-lib/aws-cloudwatch";
 import { AttributeType, Billing, TableV2 } from "aws-cdk-lib/aws-dynamodb";
@@ -107,10 +116,12 @@ export class AwsTranslatorStack extends Stack {
 
 		// Modern CloudFront Distribution (S3 for frontend and API Gateway)
 		const cloudFrontDist = new Distribution(this, "CloudFrontDist", {
-			defaultRootObject: "index.html",
 			comment: "aws-translator App (S3 frontend + API Gateway)",
 			domainNames: ["lang.terijaki.eu"],
 			certificate,
+			defaultRootObject: "index.html",
+			enableIpv6: false,
+			priceClass: PriceClass.PRICE_CLASS_100, // for lower cost
 			defaultBehavior: {
 				origin: S3BucketOrigin.withOriginAccessIdentity(websiteBucket, {
 					originAccessIdentity: originAccessIdentityS3,
@@ -146,6 +157,13 @@ export class AwsTranslatorStack extends Stack {
 		new CfnOutput(this, "CloudFrontURL", {
 			value: `https://${cloudFrontDist.domainName}`,
 			description: "CloudFront distribution URL (frontend + API)",
+		});
+
+		// Deploy frontend build output to S3
+		new BucketDeployment(this, "DeployFrontend", {
+			sources: [Source.asset("frontend/dist")],
+			destinationBucket: websiteBucket,
+			retainOnDelete: false,
 		});
 
 		// CloudWatch Dashboard for Lambda metrics
@@ -209,13 +227,6 @@ export class AwsTranslatorStack extends Stack {
 				],
 			}),
 		);
-
-		// Deploy frontend build output to S3
-		new BucketDeployment(this, "DeployFrontend", {
-			sources: [Source.asset("frontend/dist")],
-			destinationBucket: websiteBucket,
-			retainOnDelete: false,
-		});
 
 		// AWS Budget: 30 EUR/month, notify at 10 and 20 EUR
 		new CfnBudget(this, "MonthlyBudget", {
