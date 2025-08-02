@@ -4,8 +4,6 @@
     "": {
       "name": "aws-translator",
       "dependencies": {
-        "@aws-cdk/aws-cloudfront-origins": "^1.204.0",
-        "@aws-cdk/aws-lambda-nodejs": "^1.32.2",
         "aws-cdk-lib": "^2.208.0",
         "aws-sdk": "^2.1692.0",
         "constructs": "^10.4.2",
@@ -68,79 +66,7 @@
 
     "@aws-cdk/asset-node-proxy-agent-v6": ["@aws-cdk/asset-node-proxy-agent-v6@2.1.0", "", {}, ""],
 
-    "@aws-cdk/assets": ["@aws-cdk/assets@1.204.0", "", { "dependencies": { "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-acmpca": ["@aws-cdk/aws-acmpca@1.204.0", "", { "dependencies": { "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-apigateway": ["@aws-cdk/aws-apigateway@1.204.0", "", { "dependencies": { "@aws-cdk/aws-certificatemanager": "1.204.0", "@aws-cdk/aws-cloudwatch": "1.204.0", "@aws-cdk/aws-cognito": "1.204.0", "@aws-cdk/aws-ec2": "1.204.0", "@aws-cdk/aws-elasticloadbalancingv2": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-lambda": "1.204.0", "@aws-cdk/aws-logs": "1.204.0", "@aws-cdk/aws-s3": "1.204.0", "@aws-cdk/aws-s3-assets": "1.204.0", "@aws-cdk/aws-stepfunctions": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-certificatemanager": "1.204.0", "@aws-cdk/aws-cloudwatch": "1.204.0", "@aws-cdk/aws-cognito": "1.204.0", "@aws-cdk/aws-ec2": "1.204.0", "@aws-cdk/aws-elasticloadbalancingv2": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-lambda": "1.204.0", "@aws-cdk/aws-logs": "1.204.0", "@aws-cdk/aws-s3": "1.204.0", "@aws-cdk/aws-s3-assets": "1.204.0", "@aws-cdk/aws-stepfunctions": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-applicationautoscaling": ["@aws-cdk/aws-applicationautoscaling@1.204.0", "", { "dependencies": { "@aws-cdk/aws-autoscaling-common": "1.204.0", "@aws-cdk/aws-cloudwatch": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-autoscaling-common": "1.204.0", "@aws-cdk/aws-cloudwatch": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-autoscaling-common": ["@aws-cdk/aws-autoscaling-common@1.204.0", "", { "dependencies": { "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-certificatemanager": ["@aws-cdk/aws-certificatemanager@1.204.0", "", { "dependencies": { "@aws-cdk/aws-acmpca": "1.204.0", "@aws-cdk/aws-cloudwatch": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-lambda": "1.204.0", "@aws-cdk/aws-route53": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-acmpca": "1.204.0", "@aws-cdk/aws-cloudwatch": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-lambda": "1.204.0", "@aws-cdk/aws-route53": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-cloudformation": ["@aws-cdk/aws-cloudformation@1.204.0", "", { "dependencies": { "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-lambda": "1.204.0", "@aws-cdk/aws-s3": "1.204.0", "@aws-cdk/aws-sns": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-lambda": "1.204.0", "@aws-cdk/aws-s3": "1.204.0", "@aws-cdk/aws-sns": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-cloudfront": ["@aws-cdk/aws-cloudfront@1.204.0", "", { "dependencies": { "@aws-cdk/aws-certificatemanager": "1.204.0", "@aws-cdk/aws-cloudwatch": "1.204.0", "@aws-cdk/aws-ec2": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-kms": "1.204.0", "@aws-cdk/aws-lambda": "1.204.0", "@aws-cdk/aws-s3": "1.204.0", "@aws-cdk/aws-ssm": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-certificatemanager": "1.204.0", "@aws-cdk/aws-cloudwatch": "1.204.0", "@aws-cdk/aws-ec2": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-kms": "1.204.0", "@aws-cdk/aws-lambda": "1.204.0", "@aws-cdk/aws-s3": "1.204.0", "@aws-cdk/aws-ssm": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-cloudfront-origins": ["@aws-cdk/aws-cloudfront-origins@1.204.0", "", { "dependencies": { "@aws-cdk/aws-apigateway": "1.204.0", "@aws-cdk/aws-cloudfront": "1.204.0", "@aws-cdk/aws-elasticloadbalancingv2": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-s3": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-apigateway": "1.204.0", "@aws-cdk/aws-cloudfront": "1.204.0", "@aws-cdk/aws-elasticloadbalancingv2": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-s3": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-cloudwatch": ["@aws-cdk/aws-cloudwatch@1.204.0", "", { "dependencies": { "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-codeguruprofiler": ["@aws-cdk/aws-codeguruprofiler@1.204.0", "", { "dependencies": { "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-codestarnotifications": ["@aws-cdk/aws-codestarnotifications@1.204.0", "", { "dependencies": { "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-cognito": ["@aws-cdk/aws-cognito@1.204.0", "", { "dependencies": { "@aws-cdk/aws-certificatemanager": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-kms": "1.204.0", "@aws-cdk/aws-lambda": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/custom-resources": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-certificatemanager": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-kms": "1.204.0", "@aws-cdk/aws-lambda": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/custom-resources": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-ec2": ["@aws-cdk/aws-ec2@1.204.0", "", { "dependencies": { "@aws-cdk/aws-cloudwatch": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-kms": "1.204.0", "@aws-cdk/aws-logs": "1.204.0", "@aws-cdk/aws-s3": "1.204.0", "@aws-cdk/aws-s3-assets": "1.204.0", "@aws-cdk/aws-ssm": "1.204.0", "@aws-cdk/cloud-assembly-schema": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "@aws-cdk/region-info": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-cloudwatch": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-kms": "1.204.0", "@aws-cdk/aws-logs": "1.204.0", "@aws-cdk/aws-s3": "1.204.0", "@aws-cdk/aws-s3-assets": "1.204.0", "@aws-cdk/aws-ssm": "1.204.0", "@aws-cdk/cloud-assembly-schema": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "@aws-cdk/region-info": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-ecr": ["@aws-cdk/aws-ecr@1.204.0", "", { "dependencies": { "@aws-cdk/aws-events": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-kms": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-events": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-kms": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-ecr-assets": ["@aws-cdk/aws-ecr-assets@1.204.0", "", { "dependencies": { "@aws-cdk/assets": "1.204.0", "@aws-cdk/aws-ecr": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-s3": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/assets": "1.204.0", "@aws-cdk/aws-ecr": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-s3": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-efs": ["@aws-cdk/aws-efs@1.204.0", "", { "dependencies": { "@aws-cdk/aws-ec2": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-kms": "1.204.0", "@aws-cdk/cloud-assembly-schema": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-ec2": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-kms": "1.204.0", "@aws-cdk/cloud-assembly-schema": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-elasticloadbalancingv2": ["@aws-cdk/aws-elasticloadbalancingv2@1.204.0", "", { "dependencies": { "@aws-cdk/aws-certificatemanager": "1.204.0", "@aws-cdk/aws-cloudwatch": "1.204.0", "@aws-cdk/aws-ec2": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-lambda": "1.204.0", "@aws-cdk/aws-route53": "1.204.0", "@aws-cdk/aws-s3": "1.204.0", "@aws-cdk/cloud-assembly-schema": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "@aws-cdk/region-info": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-certificatemanager": "1.204.0", "@aws-cdk/aws-cloudwatch": "1.204.0", "@aws-cdk/aws-ec2": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-lambda": "1.204.0", "@aws-cdk/aws-route53": "1.204.0", "@aws-cdk/aws-s3": "1.204.0", "@aws-cdk/cloud-assembly-schema": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "@aws-cdk/region-info": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-events": ["@aws-cdk/aws-events@1.204.0", "", { "dependencies": { "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-iam": ["@aws-cdk/aws-iam@1.204.0", "", { "dependencies": { "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "@aws-cdk/region-info": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/core": "1.204.0", "@aws-cdk/region-info": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-kms": ["@aws-cdk/aws-kms@1.204.0", "", { "dependencies": { "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/cloud-assembly-schema": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/cloud-assembly-schema": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-lambda": ["@aws-cdk/aws-lambda@1.204.0", "", { "dependencies": { "@aws-cdk/aws-applicationautoscaling": "1.204.0", "@aws-cdk/aws-cloudwatch": "1.204.0", "@aws-cdk/aws-codeguruprofiler": "1.204.0", "@aws-cdk/aws-ec2": "1.204.0", "@aws-cdk/aws-ecr": "1.204.0", "@aws-cdk/aws-ecr-assets": "1.204.0", "@aws-cdk/aws-efs": "1.204.0", "@aws-cdk/aws-events": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-kms": "1.204.0", "@aws-cdk/aws-logs": "1.204.0", "@aws-cdk/aws-s3": "1.204.0", "@aws-cdk/aws-s3-assets": "1.204.0", "@aws-cdk/aws-signer": "1.204.0", "@aws-cdk/aws-sns": "1.204.0", "@aws-cdk/aws-sqs": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "@aws-cdk/region-info": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-applicationautoscaling": "1.204.0", "@aws-cdk/aws-cloudwatch": "1.204.0", "@aws-cdk/aws-codeguruprofiler": "1.204.0", "@aws-cdk/aws-ec2": "1.204.0", "@aws-cdk/aws-ecr": "1.204.0", "@aws-cdk/aws-ecr-assets": "1.204.0", "@aws-cdk/aws-efs": "1.204.0", "@aws-cdk/aws-events": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-kms": "1.204.0", "@aws-cdk/aws-logs": "1.204.0", "@aws-cdk/aws-s3": "1.204.0", "@aws-cdk/aws-s3-assets": "1.204.0", "@aws-cdk/aws-signer": "1.204.0", "@aws-cdk/aws-sns": "1.204.0", "@aws-cdk/aws-sqs": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "@aws-cdk/region-info": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-lambda-nodejs": ["@aws-cdk/aws-lambda-nodejs@1.204.0", "", { "dependencies": { "@aws-cdk/aws-lambda": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-lambda": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-logs": ["@aws-cdk/aws-logs@1.204.0", "", { "dependencies": { "@aws-cdk/aws-cloudwatch": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-kms": "1.204.0", "@aws-cdk/aws-s3-assets": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-cloudwatch": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-kms": "1.204.0", "@aws-cdk/aws-s3-assets": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-route53": ["@aws-cdk/aws-route53@1.204.0", "", { "dependencies": { "@aws-cdk/aws-ec2": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-logs": "1.204.0", "@aws-cdk/cloud-assembly-schema": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/custom-resources": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-ec2": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-logs": "1.204.0", "@aws-cdk/cloud-assembly-schema": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/custom-resources": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-s3": ["@aws-cdk/aws-s3@1.204.0", "", { "dependencies": { "@aws-cdk/aws-events": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-kms": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-events": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-kms": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-s3-assets": ["@aws-cdk/aws-s3-assets@1.204.0", "", { "dependencies": { "@aws-cdk/assets": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-kms": "1.204.0", "@aws-cdk/aws-s3": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/assets": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-kms": "1.204.0", "@aws-cdk/aws-s3": "1.204.0", "@aws-cdk/core": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-signer": ["@aws-cdk/aws-signer@1.204.0", "", { "dependencies": { "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-sns": ["@aws-cdk/aws-sns@1.204.0", "", { "dependencies": { "@aws-cdk/aws-cloudwatch": "1.204.0", "@aws-cdk/aws-codestarnotifications": "1.204.0", "@aws-cdk/aws-events": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-kms": "1.204.0", "@aws-cdk/aws-sqs": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-cloudwatch": "1.204.0", "@aws-cdk/aws-codestarnotifications": "1.204.0", "@aws-cdk/aws-events": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-kms": "1.204.0", "@aws-cdk/aws-sqs": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-sqs": ["@aws-cdk/aws-sqs@1.204.0", "", { "dependencies": { "@aws-cdk/aws-cloudwatch": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-kms": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-cloudwatch": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-kms": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-ssm": ["@aws-cdk/aws-ssm@1.204.0", "", { "dependencies": { "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-kms": "1.204.0", "@aws-cdk/cloud-assembly-schema": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-kms": "1.204.0", "@aws-cdk/cloud-assembly-schema": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/aws-stepfunctions": ["@aws-cdk/aws-stepfunctions@1.204.0", "", { "dependencies": { "@aws-cdk/aws-cloudwatch": "1.204.0", "@aws-cdk/aws-events": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-logs": "1.204.0", "@aws-cdk/aws-s3": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-cloudwatch": "1.204.0", "@aws-cdk/aws-events": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-logs": "1.204.0", "@aws-cdk/aws-s3": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
     "@aws-cdk/cloud-assembly-schema": ["@aws-cdk/cloud-assembly-schema@45.2.0", "", {}, ""],
-
-    "@aws-cdk/core": ["@aws-cdk/core@1.204.0", "", { "dependencies": { "@aws-cdk/cloud-assembly-schema": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "@aws-cdk/region-info": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/cloud-assembly-schema": "1.204.0", "@aws-cdk/cx-api": "1.204.0", "@aws-cdk/region-info": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/custom-resources": ["@aws-cdk/custom-resources@1.204.0", "", { "dependencies": { "@aws-cdk/aws-cloudformation": "1.204.0", "@aws-cdk/aws-ec2": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-lambda": "1.204.0", "@aws-cdk/aws-logs": "1.204.0", "@aws-cdk/aws-sns": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" }, "peerDependencies": { "@aws-cdk/aws-cloudformation": "1.204.0", "@aws-cdk/aws-ec2": "1.204.0", "@aws-cdk/aws-iam": "1.204.0", "@aws-cdk/aws-lambda": "1.204.0", "@aws-cdk/aws-logs": "1.204.0", "@aws-cdk/aws-sns": "1.204.0", "@aws-cdk/core": "1.204.0", "constructs": "^3.3.69" } }, ""],
-
-    "@aws-cdk/cx-api": ["@aws-cdk/cx-api@1.204.0", "", { "dependencies": { "@aws-cdk/cloud-assembly-schema": "1.204.0" }, "peerDependencies": { "@aws-cdk/cloud-assembly-schema": "1.204.0" } }, ""],
-
-    "@aws-cdk/region-info": ["@aws-cdk/region-info@1.204.0", "", {}, ""],
 
     "@babel/code-frame": ["@babel/code-frame@7.27.1", "", { "dependencies": { "@babel/helper-validator-identifier": "^7.27.1", "js-tokens": "^4.0.0", "picocolors": "^1.1.1" } }, ""],
 
@@ -581,90 +507,6 @@
     "yallist": ["yallist@5.0.0", "", {}, "sha512-YgvUTfwqyc7UXVMrB+SImsVYSmTS8X/tSrtdNZMImM+n7+QTriRXyXim0mBrTXNeqzVF0KWGgHPeiyViFFrNDw=="],
 
     "yaml": ["yaml@1.10.2", "", {}, ""],
-
-    "@aws-cdk/assets/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-acmpca/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-apigateway/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-applicationautoscaling/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-autoscaling-common/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-certificatemanager/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-cloudformation/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-cloudfront/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-cloudfront-origins/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-cloudwatch/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-codeguruprofiler/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-codestarnotifications/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-cognito/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-ec2/@aws-cdk/cloud-assembly-schema": ["@aws-cdk/cloud-assembly-schema@1.204.0", "", {}, ""],
-
-    "@aws-cdk/aws-ec2/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-ecr/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-ecr-assets/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-efs/@aws-cdk/cloud-assembly-schema": ["@aws-cdk/cloud-assembly-schema@1.204.0", "", {}, ""],
-
-    "@aws-cdk/aws-efs/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-elasticloadbalancingv2/@aws-cdk/cloud-assembly-schema": ["@aws-cdk/cloud-assembly-schema@1.204.0", "", {}, ""],
-
-    "@aws-cdk/aws-elasticloadbalancingv2/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-events/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-iam/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-kms/@aws-cdk/cloud-assembly-schema": ["@aws-cdk/cloud-assembly-schema@1.204.0", "", {}, ""],
-
-    "@aws-cdk/aws-kms/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-lambda/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-lambda-nodejs/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-logs/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-route53/@aws-cdk/cloud-assembly-schema": ["@aws-cdk/cloud-assembly-schema@1.204.0", "", {}, ""],
-
-    "@aws-cdk/aws-route53/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-s3/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-s3-assets/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-signer/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-sns/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-sqs/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-ssm/@aws-cdk/cloud-assembly-schema": ["@aws-cdk/cloud-assembly-schema@1.204.0", "", {}, ""],
-
-    "@aws-cdk/aws-ssm/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/aws-stepfunctions/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/core/@aws-cdk/cloud-assembly-schema": ["@aws-cdk/cloud-assembly-schema@1.204.0", "", {}, ""],
-
-    "@aws-cdk/core/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/custom-resources/constructs": ["constructs@3.4.344", "", {}, ""],
-
-    "@aws-cdk/cx-api/@aws-cdk/cloud-assembly-schema": ["@aws-cdk/cloud-assembly-schema@1.204.0", "", {}, ""],
 
     "@tailwindcss/oxide-wasm32-wasi/@emnapi/core": ["@emnapi/core@1.4.5", "", { "dependencies": { "@emnapi/wasi-threads": "1.0.4", "tslib": "^2.4.0" }, "bundled": true }, "sha512-XsLw1dEOpkSX/WucdqUhPWP7hDxSvZiY+fsUC14h+FtQ2Ifni4znbBt8punRX+Uj2JG/uDb8nEHVKvrVlvdZ5Q=="],
 
