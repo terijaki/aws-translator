@@ -7,9 +7,7 @@ const dynamodb = new DynamoDB.DocumentClient();
 export const handler = async (): Promise<APIGatewayProxyResult> => {
 	try {
 		// check the results for language detection in dynamoDB
-		const results = await dynamodb
-			.scan({ TableName: LANGUAGE_DETECTION_TABLE_NAME })
-			.promise();
+		const results = await dynamodb.scan({ TableName: LANGUAGE_DETECTION_TABLE_NAME }).promise();
 		// Count language codes using a Map and return sorted array
 		if (results?.Items) {
 			// Create a Map to count occurrences of each language code

@@ -6,12 +6,9 @@ import { v4 as uuidv4 } from "uuid";
 const comprehend = new Comprehend();
 const dynamodb = new DynamoDB.DocumentClient();
 
-export const handler = async (
-	event: APIGatewayProxyEvent,
-): Promise<APIGatewayProxyResult> => {
+export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
 	// input validation
-	const body =
-		typeof event.body === "string" ? JSON.parse(event.body) : event.body;
+	const body = typeof event.body === "string" ? JSON.parse(event.body) : event.body;
 	const text = body?.text;
 	if (!text) {
 		return {
@@ -21,9 +18,7 @@ export const handler = async (
 	}
 
 	try {
-		const result = await comprehend
-			.detectDominantLanguage({ Text: text })
-			.promise();
+		const result = await comprehend.detectDominantLanguage({ Text: text }).promise();
 		const langCode = result.Languages?.[0]?.LanguageCode;
 
 		// Write to DynamoDB if detection was successful
@@ -34,9 +29,7 @@ export const handler = async (
 				languageCode: langCode,
 				timestamp: new Date().toISOString(),
 			};
-			await dynamodb
-				.put({ TableName: LANGUAGE_DETECTION_TABLE_NAME, Item: item })
-				.promise();
+			await dynamodb.put({ TableName: LANGUAGE_DETECTION_TABLE_NAME, Item: item }).promise();
 		}
 
 		return {

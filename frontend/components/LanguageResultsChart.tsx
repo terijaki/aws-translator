@@ -4,43 +4,22 @@ import { useQuery } from "@tanstack/react-query";
 import { CloudAlert } from "lucide-react";
 import { Bar, BarChart, Cell, XAxis, YAxis } from "recharts";
 import { toast } from "sonner";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
-import {
-	type ChartConfig,
-	ChartContainer,
-	ChartTooltip,
-	ChartTooltipContent,
-} from "@/components/ui/chart";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { LANGUAGE_DETECTION_RESULTS_ROUTE } from "../../constants/cdkNames";
-import {
-	LANGUAGE_COLOR_MAP,
-	LANGUAGE_EMOJI_MAP,
-	LANGUAGE_NAME_MAP,
-} from "../../constants/languages";
+import { LANGUAGE_COLOR_MAP, LANGUAGE_EMOJI_MAP, LANGUAGE_NAME_MAP } from "../../constants/languages";
 import { Skeleton } from "./ui/skeleton";
 
 export const description = "A mixed bar chart";
 
 // Generate chartConfig dynamically from languageResults
-function getChartConfig(
-	languageResults: { code: string }[] | undefined,
-): ChartConfig {
+function getChartConfig(languageResults: { code: string }[] | undefined): ChartConfig {
 	if (!languageResults) return {};
 	const config: ChartConfig = {};
 	languageResults.forEach((item) => {
 		config[item.code] = {
-			label:
-				LANGUAGE_NAME_MAP[item.code as keyof typeof LANGUAGE_NAME_MAP] ||
-				item.code,
-			color:
-				LANGUAGE_COLOR_MAP[item.code as keyof typeof LANGUAGE_COLOR_MAP] ||
-				"var(--chart-1)",
+			label: LANGUAGE_NAME_MAP[item.code as keyof typeof LANGUAGE_NAME_MAP] || item.code,
+			color: LANGUAGE_COLOR_MAP[item.code as keyof typeof LANGUAGE_COLOR_MAP] || "var(--chart-1)",
 		};
 	});
 	return config;
@@ -127,28 +106,12 @@ export function LanguageResultsChart() {
 									tickMargin={6}
 									axisLine={false}
 									tick={{ fontSize: 24 }}
-									tickFormatter={(value) =>
-										LANGUAGE_EMOJI_MAP[
-											value as keyof typeof LANGUAGE_EMOJI_MAP
-										] || "🤔"
-									}
+									tickFormatter={(value) => LANGUAGE_EMOJI_MAP[value as keyof typeof LANGUAGE_EMOJI_MAP] || "🤔"}
 								/>
 								<XAxis dataKey="count" type="number" hide />
-								<ChartTooltip
-									cursor={false}
-									content={<ChartTooltipContent />}
-								/>
+								<ChartTooltip cursor={false} content={<ChartTooltipContent />} />
 								<Bar dataKey="count" layout="vertical" radius={6} barSize={24}>
-									{Array.isArray(data) &&
-										data.map((entry) => (
-											<Cell
-												key={entry.code}
-												fill={
-													chartConfig[entry.code]?.color ||
-													"oklch(65% 0.75 252)"
-												}
-											/>
-										))}
+									{Array.isArray(data) && data.map((entry) => <Cell key={entry.code} fill={chartConfig[entry.code]?.color || "oklch(65% 0.75 252)"} />)}
 								</Bar>
 							</BarChart>
 						</ChartContainer>

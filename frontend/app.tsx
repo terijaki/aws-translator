@@ -1,27 +1,14 @@
 import { useForm } from "@tanstack/react-form";
-import {
-	QueryClient,
-	QueryClientProvider,
-	useMutation,
-} from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider, useMutation } from "@tanstack/react-query";
 import { BadgeCheck, CloudAlert, Languages, Loader } from "lucide-react";
 import { createRoot } from "react-dom/client";
 import { toast } from "sonner";
 import { LANGUAGE_DETECTION_ROUTE } from "../constants/cdkNames";
 import { LANGUAGE_EMOJI_MAP, LANGUAGE_NAME_MAP } from "../constants/languages";
-import {
-	LanguageResultsChart,
-	languageResultsQueryKey,
-} from "./components/LanguageResultsChart";
+import { LanguageResultsChart, languageResultsQueryKey } from "./components/LanguageResultsChart";
 import { Alert, AlertDescription, AlertTitle } from "./components/ui/alert";
 import { Button } from "./components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "./components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./components/ui/card";
 import { Skeleton } from "./components/ui/skeleton";
 import { Toaster } from "./components/ui/sonner";
 import { Textarea } from "./components/ui/textarea";
@@ -97,9 +84,7 @@ function App() {
 									<div>Language Detector</div>
 								</div>
 							</CardTitle>
-							<CardDescription>
-								Detect the language of your text.
-							</CardDescription>
+							<CardDescription>Detect the language of your text.</CardDescription>
 						</CardHeader>
 						<CardContent>
 							<form
@@ -112,18 +97,8 @@ function App() {
 								<form.Field name="text">
 									{(field) => (
 										<>
-											<Textarea
-												rows={4}
-												value={field.state.value}
-												onChange={(e) => field.setValue(e.target.value)}
-												placeholder="Enter text to detect language..."
-											/>
-											<Button
-												type="submit"
-												disabled={isPending || !field.state.value.trim()}
-												className="w-full mt-2"
-												color="purple"
-											>
+											<Textarea rows={4} value={field.state.value} onChange={(e) => field.setValue(e.target.value)} placeholder="Enter text to detect language..." />
+											<Button type="submit" disabled={isPending || !field.state.value.trim()} className="w-full mt-2" color="purple">
 												{isPending || form.state.isSubmitting ? (
 													<>
 														<Loader className="animate-spin animation-duration-2000" />
@@ -136,9 +111,7 @@ function App() {
 											{field.state.meta.errors.length > 0 && (
 												<Alert variant="destructive">
 													<AlertTitle>Heads up!</AlertTitle>
-													<AlertDescription>
-														{field.state.meta.errors[0]}
-													</AlertDescription>
+													<AlertDescription>{field.state.meta.errors[0]}</AlertDescription>
 												</Alert>
 											)}
 										</>
