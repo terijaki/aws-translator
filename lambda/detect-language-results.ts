@@ -26,7 +26,7 @@ export const handler = async (): Promise<APIGatewayProxyResult> => {
 			// Return the sorted array as JSON: [{ code: 'en', count: 10 }, { code: 'fr', count: 5 }, ...]
 			return {
 				statusCode: 200,
-				body: JSON.stringify(sortedArray),
+				body: JSON.stringify(sortedArray.slice(0, 5)), // Limit to top 5 languages
 			};
 		}
 	} catch (err) {

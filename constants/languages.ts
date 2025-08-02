@@ -59,7 +59,7 @@ export const LANGUAGE_COLOR_MAP: Record<string, string> = {
 	so: "oklch(70% 0.18 120)", // Somali (green)
 	es: "oklch(70% 0.18 29)", // Spanish (red)
 	sw: "oklch(70% 0.18 120)", // Swahili (green)
-	sv: "oklch(70% 0.18 240)", // Swedish (blue)
+	sv: "oklch(70% 0.18 80)", // Swedish (yellow)
 	tl: "oklch(70% 0.18 80)", // Tagalog (yellow)
 	ta: "oklch(70% 0.18 29)", // Tamil (red)
 	te: "oklch(70% 0.18 29)", // Telugu (red)
