@@ -1,5 +1,6 @@
 import {
 	CfnOutput,
+	Duration,
 	RemovalPolicy,
 	Stack,
 	type StackProps,
@@ -25,10 +26,12 @@ import {
 	HttpOrigin,
 	S3StaticWebsiteOrigin,
 } from "aws-cdk-lib/aws-cloudfront-origins";
+import { Dashboard, GraphWidget, Metric } from "aws-cdk-lib/aws-cloudwatch";
 import { AttributeType, Billing, TableV2 } from "aws-cdk-lib/aws-dynamodb";
 import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
+import { LogRetention, RetentionDays } from "aws-cdk-lib/aws-logs";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { BucketDeployment, Source } from "aws-cdk-lib/aws-s3-deployment";
@@ -87,6 +90,11 @@ export class AwsTranslatorStack extends Stack {
 				},
 			},
 		);
+		// Set log retention for detectLanguageLambda (e.g., 30 days)
+		new LogRetention(this, "DetectLanguageLogRetention", {
+			logGroupName: `/aws/lambda/${detectLanguageLambda.functionName}`,
+			retention: RetentionDays.ONE_MONTH,
+		});
 		// Grant Lambda permission to write to DynamoDB
 		languageDetectionTable.grantWriteData(detectLanguageLambda);
 		// Grant Lambda permission to use Comprehend
@@ -128,6 +136,11 @@ export class AwsTranslatorStack extends Stack {
 				},
 			},
 		);
+		// Set log retention for getLanguageResultsLambda (e.g., 30 days)
+		new LogRetention(this, "GetLanguageResultsLogRetention", {
+			logGroupName: `/aws/lambda/${getLanguageResultsLambda.functionName}`,
+			retention: RetentionDays.ONE_MONTH,
+		});
 		// Grant Lambda permission to read from DynamoDB
 		languageDetectionTable.grantReadData(getLanguageResultsLambda);
 		// Add a new resource for getting language results
@@ -190,6 +203,69 @@ export class AwsTranslatorStack extends Stack {
 				},
 			},
 		});
+
+		// CloudWatch Dashboard for Lambda metrics
+		const dashboard = new Dashboard(this, "AwsTranslatorDashboard", {
+			dashboardName: "AwsTranslatorDashboard",
+		});
+		dashboard.addWidgets(
+			new GraphWidget({
+				title: "DetectLanguage Lambda Invocations",
+				left: [
+					new Metric({
+						namespace: "AWS/Lambda",
+						metricName: "Invocations",
+						dimensionsMap: {
+							FunctionName: detectLanguageLambda.functionName,
+						},
+						statistic: "Sum",
+						period: Duration.minutes(5),
+					}),
+				],
+			}),
+			new GraphWidget({
+				title: "DetectLanguage Lambda Errors",
+				left: [
+					new Metric({
+						namespace: "AWS/Lambda",
+						metricName: "Errors",
+						dimensionsMap: {
+							FunctionName: detectLanguageLambda.functionName,
+						},
+						statistic: "Sum",
+						period: Duration.minutes(5),
+					}),
+				],
+			}),
+			new GraphWidget({
+				title: "GetLanguageResults Lambda Invocations",
+				left: [
+					new Metric({
+						namespace: "AWS/Lambda",
+						metricName: "Invocations",
+						dimensionsMap: {
+							FunctionName: getLanguageResultsLambda.functionName,
+						},
+						statistic: "Sum",
+						period: Duration.minutes(5),
+					}),
+				],
+			}),
+			new GraphWidget({
+				title: "GetLanguageResults Lambda Errors",
+				left: [
+					new Metric({
+						namespace: "AWS/Lambda",
+						metricName: "Errors",
+						dimensionsMap: {
+							FunctionName: getLanguageResultsLambda.functionName,
+						},
+						statistic: "Sum",
+						period: Duration.minutes(5),
+					}),
+				],
+			}),
+		);
 
 		// Output the CloudFront URL
 		new CfnOutput(this, "CloudFrontURL", {
