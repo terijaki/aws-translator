@@ -5,6 +5,6 @@ import { AwsTranslatorStack } from "../lib/aws-translator-stack";
 const app = new cdk.App();
 new AwsTranslatorStack(app, "AwsTranslatorStack", {
 	env: {
-		region: "eu-central-1",
+		region: "us-east-1",
 	},
 });

@@ -2,16 +2,7 @@ import { CfnOutput, Duration, RemovalPolicy, Stack, type StackProps, Tags } from
 import { AuthorizationType, LambdaIntegration, LambdaRestApi } from "aws-cdk-lib/aws-apigateway";
 import { CfnBudget } from "aws-cdk-lib/aws-budgets";
 import { Certificate } from "aws-cdk-lib/aws-certificatemanager";
-import {
-	AllowedMethods,
-	CachePolicy,
-	Distribution,
-	OriginAccessIdentity,
-	OriginProtocolPolicy,
-	PriceClass,
-	ResponseHeadersPolicy,
-	ViewerProtocolPolicy,
-} from "aws-cdk-lib/aws-cloudfront";
+import { AllowedMethods, CachePolicy, Distribution, OriginProtocolPolicy, PriceClass, ResponseHeadersPolicy, ViewerProtocolPolicy } from "aws-cdk-lib/aws-cloudfront";
 import { HttpOrigin, S3BucketOrigin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { Dashboard, GraphWidget, Metric } from "aws-cdk-lib/aws-cloudwatch";
 import { AttributeType, Billing, TableV2 } from "aws-cdk-lib/aws-dynamodb";
@@ -19,10 +10,10 @@ import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { LogRetention, RetentionDays } from "aws-cdk-lib/aws-logs";
-import { Bucket } from "aws-cdk-lib/aws-s3";
+import { BlockPublicAccess, Bucket } from "aws-cdk-lib/aws-s3";
 import { BucketDeployment, Source } from "aws-cdk-lib/aws-s3-deployment";
 import type { Construct } from "constructs";
-import { LANGUAGE_DETECTION_RESULTS_ROUTE, LANGUAGE_DETECTION_ROUTE, LANGUAGE_DETECTION_TABLE_NAME } from "../constants/cdkNames";
+import { DOMAIN_NAME, LANGUAGE_DETECTION_RESULTS_ROUTE, LANGUAGE_DETECTION_ROUTE, LANGUAGE_DETECTION_TABLE_NAME } from "../constants/cdkNames";
 
 export class AwsTranslatorStack extends Stack {
 	constructor(scope: Construct, id: string, props?: StackProps) {
@@ -30,16 +21,19 @@ export class AwsTranslatorStack extends Stack {
 		// Tag all resources in this stack
 		Tags.of(this).add("App", "aws-translator-app");
 
-		// CloudFront Origin Access Identity for S3
-		const originAccessIdentityS3 = new OriginAccessIdentity(this, "FrontendOAI");
-
-		// S3 bucket for static website hosting (private, accessed via CloudFront OAI)
+		// S3 bucket for static website hosting
 		const websiteBucket = new Bucket(this, "FrontendBucket", {
 			removalPolicy: RemovalPolicy.DESTROY,
 			autoDeleteObjects: true,
+			publicReadAccess: true, // Allow public read access for static website
+			blockPublicAccess: BlockPublicAccess.BLOCK_ACLS_ONLY,
 		});
-		// Grant read access to CloudFront Origin Access Identity
-		websiteBucket.grantRead(originAccessIdentityS3);
+		// Deploy frontend build output to S3
+		new BucketDeployment(this, "DeployFrontend", {
+			sources: [Source.asset("frontend/dist")],
+			destinationBucket: websiteBucket,
+			retainOnDelete: false,
+		});
 
 		// DynamoDB Table to store language detection results
 		const languageDetectionTable = new TableV2(this, LANGUAGE_DETECTION_TABLE_NAME, {
@@ -73,24 +67,6 @@ export class AwsTranslatorStack extends Stack {
 			}),
 		);
 
-		// API Gateway to expose Lambda
-		const api = new LambdaRestApi(this, "Endpoint", {
-			handler: detectLanguageLambda,
-			proxy: false,
-			defaultMethodOptions: {
-				authorizationType: AuthorizationType.NONE,
-			},
-			deployOptions: {
-				stageName: "prod",
-			},
-			restApiName: "LanguageDetectApi",
-			description: "API for language detection using AWS Comprehend",
-		});
-
-		// Add CORS support to the API Gateway resource
-		const detectResource = api.root.addResource(LANGUAGE_DETECTION_ROUTE);
-		detectResource.addMethod("POST");
-
 		// Lambda function to get language detection results
 		const getLanguageResultsLambda = new NodejsFunction(this, "GetLanguageResultsHandler", {
 			runtime: Runtime.NODEJS_22_X,
@@ -107,9 +83,24 @@ export class AwsTranslatorStack extends Stack {
 		});
 		// Grant Lambda permission to read from DynamoDB
 		languageDetectionTable.grantReadData(getLanguageResultsLambda);
+
+		// API Gateway to expose Lambda
+		const api = new LambdaRestApi(this, "Endpoint", {
+			handler: detectLanguageLambda,
+			proxy: false,
+			defaultMethodOptions: {
+				authorizationType: AuthorizationType.NONE,
+			},
+			deployOptions: {
+				stageName: "prod",
+			},
+			restApiName: "LanguageDetectApi",
+			description: "API for language detection using AWS Comprehend",
+		});
+		// Add a new resource for language detection
+		api.root.addResource(LANGUAGE_DETECTION_ROUTE).addMethod("POST");
 		// Add a new resource for getting language results
-		const getResultsResource = api.root.addResource(LANGUAGE_DETECTION_RESULTS_ROUTE);
-		getResultsResource.addMethod("GET", new LambdaIntegration(getLanguageResultsLambda));
+		api.root.addResource(LANGUAGE_DETECTION_RESULTS_ROUTE).addMethod("GET", new LambdaIntegration(getLanguageResultsLambda));
 
 		// Import ACM certificate for *.terijaki.eu (must be in us-east-1 for CloudFront)
 		const certificate = Certificate.fromCertificateArn(this, "LangTerijakiEuCert", "arn:aws:acm:us-east-1:090814024092:certificate/9f9c58b0-737d-49a0-8135-75b95e52cc28");
@@ -117,20 +108,18 @@ export class AwsTranslatorStack extends Stack {
 		// Modern CloudFront Distribution (S3 for frontend and API Gateway)
 		const cloudFrontDist = new Distribution(this, "CloudFrontDist", {
 			comment: "aws-translator App (S3 frontend + API Gateway)",
-			domainNames: ["lang.terijaki.eu"],
+			domainNames: [DOMAIN_NAME],
 			certificate,
 			defaultRootObject: "index.html",
-			enableIpv6: false,
 			priceClass: PriceClass.PRICE_CLASS_100, // for lower cost
+			enableIpv6: false,
 			defaultBehavior: {
-				origin: S3BucketOrigin.withOriginAccessIdentity(websiteBucket, {
-					originAccessIdentity: originAccessIdentityS3,
-				}),
+				origin: S3BucketOrigin.withBucketDefaults(websiteBucket),
 				allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
 				viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-				compress: true,
 				cachePolicy: CachePolicy.CACHING_OPTIMIZED,
 				responseHeadersPolicy: ResponseHeadersPolicy.CORS_ALLOW_ALL_ORIGINS_WITH_PREFLIGHT,
+				compress: true,
 			},
 			additionalBehaviors: {
 				[`/${LANGUAGE_DETECTION_ROUTE}`]: {
@@ -140,7 +129,6 @@ export class AwsTranslatorStack extends Stack {
 					}),
 					allowedMethods: AllowedMethods.ALLOW_ALL,
 					cachePolicy: CachePolicy.CACHING_DISABLED,
-					viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
 				},
 				[`/${LANGUAGE_DETECTION_RESULTS_ROUTE}`]: {
 					origin: new HttpOrigin(`${api.restApiId}.execute-api.${this.region}.amazonaws.com`, {
@@ -149,7 +137,6 @@ export class AwsTranslatorStack extends Stack {
 					}),
 					allowedMethods: AllowedMethods.ALLOW_ALL,
 					cachePolicy: CachePolicy.CACHING_DISABLED,
-					viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
 				},
 			},
 		});
@@ -157,13 +144,6 @@ export class AwsTranslatorStack extends Stack {
 		new CfnOutput(this, "CloudFrontURL", {
 			value: `https://${cloudFrontDist.domainName}`,
 			description: "CloudFront distribution URL (frontend + API)",
-		});
-
-		// Deploy frontend build output to S3
-		new BucketDeployment(this, "DeployFrontend", {
-			sources: [Source.asset("frontend/dist")],
-			destinationBucket: websiteBucket,
-			retainOnDelete: false,
 		});
 
 		// CloudWatch Dashboard for Lambda metrics
