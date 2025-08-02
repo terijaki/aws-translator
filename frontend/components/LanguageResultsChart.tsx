@@ -80,7 +80,7 @@ export function LanguageResultsChart() {
 	const chartConfig = getChartConfig(data);
 
 	return (
-		<div className="max-w-lg min-w-md flex flex-col space-y-4 mx-auto lg:ms-0">
+		<div className="max-w-lg min-w-full md:min-w-md flex flex-col space-y-4 mx-auto lg:ms-0">
 			{isLoading ? (
 				<Skeleton className="h-18 lg:h-72 w-full bg-neutral-300" />
 			) : (
