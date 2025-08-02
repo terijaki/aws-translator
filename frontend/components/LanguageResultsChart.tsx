@@ -64,6 +64,13 @@ async function fetchLanguageResults() {
 		if (err instanceof Error && err.message) {
 			message = err.message;
 		}
+		// return [
+		// 	{ code: "pl", count: 10 },
+		// 	{ code: "de", count: 8 },
+		// 	{ code: "fr", count: 8 },
+		// 	{ code: "it", count: 4 },
+		// 	{ code: "nl", count: 2 },
+		// ];
 		throw new Error(message);
 	}
 }
@@ -119,7 +126,7 @@ export function LanguageResultsChart() {
 									tickLine={false}
 									tickMargin={6}
 									axisLine={false}
-									tick={{ fontSize: 28 }}
+									tick={{ fontSize: 24 }}
 									tickFormatter={(value) =>
 										LANGUAGE_EMOJI_MAP[
 											value as keyof typeof LANGUAGE_EMOJI_MAP
@@ -131,7 +138,7 @@ export function LanguageResultsChart() {
 									cursor={false}
 									content={<ChartTooltipContent />}
 								/>
-								<Bar dataKey="count" layout="vertical" radius={6} barSize={28}>
+								<Bar dataKey="count" layout="vertical" radius={6} barSize={24}>
 									{Array.isArray(data) &&
 										data.map((entry) => (
 											<Cell
@@ -146,14 +153,6 @@ export function LanguageResultsChart() {
 							</BarChart>
 						</ChartContainer>
 					</CardContent>
-					{/* <CardFooter className="flex-col items-start gap-2 text-sm">
-						   <div className="flex gap-2 leading-none font-medium">
-								   Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-						   </div>
-						   <div className="text-muted-foreground leading-none">
-								   Showing total visitors for the last 6 months
-						   </div>
-				   </CardFooter> */}
 				</Card>
 			)}
 		</div>
