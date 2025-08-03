@@ -76,7 +76,7 @@ function App() {
 		<>
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-4 justify-center-safe">
 				<div className="max-w-lg min-w-full md:min-w-md flex flex-col space-y-4 mx-auto lg:me-0">
-					<Card className="shadow-xs">
+					<Card className="shadow-xs w-full">
 						<CardHeader>
 							<CardTitle>
 								<div className="flex items-center space-x-2">
