@@ -5,7 +5,7 @@ import { CloudAlert } from "lucide-react";
 import { Bar, BarChart, Cell, XAxis, YAxis } from "recharts";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
 import { LANGUAGE_DETECTION_RESULTS_ROUTE } from "../../constants/cdkNames";
 import { LANGUAGE_COLOR_MAP, LANGUAGE_EMOJI_MAP, LANGUAGE_NAME_MAP } from "../../constants/languages";
 import { Skeleton } from "./ui/skeleton";
@@ -43,13 +43,16 @@ async function fetchLanguageResults() {
 		if (err instanceof Error && err.message) {
 			message = err.message;
 		}
-		// return [
-		// 	{ code: "pl", count: 10 },
-		// 	{ code: "de", count: 8 },
-		// 	{ code: "fr", count: 8 },
-		// 	{ code: "it", count: 4 },
-		// 	{ code: "nl", count: 2 },
-		// ];
+		if (process.env.NODE_ENV === "development") {
+			return [
+				{ code: "kk", count: 10 },
+				{ code: "de", count: 8 },
+				{ code: "it", count: 4 },
+				{ code: "nl", count: 2 },
+				{ code: "en", count: 1 },
+				// { code: "ja", count: 1 },
+			];
+		}
 		throw new Error(message);
 	}
 }
@@ -105,11 +108,10 @@ export function LanguageResultsChart() {
 									tickLine={false}
 									tickMargin={6}
 									axisLine={false}
-									tick={{ fontSize: 24 }}
+									tick={{ fontSize: 20 }}
 									tickFormatter={(value) => LANGUAGE_EMOJI_MAP[value as keyof typeof LANGUAGE_EMOJI_MAP] || "🤔"}
 								/>
 								<XAxis dataKey="count" type="number" hide />
-								<ChartTooltip cursor={false} content={<ChartTooltipContent />} />
 								<Bar dataKey="count" layout="vertical" radius={6} barSize={24}>
 									{Array.isArray(data) && data.map((entry) => <Cell key={entry.code} fill={chartConfig[entry.code]?.color || "oklch(65% 0.75 252)"} />)}
 								</Bar>
